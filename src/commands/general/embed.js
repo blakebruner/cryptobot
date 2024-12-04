@@ -3,7 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 
 /** @type {import("commandkit").CommandData}  */
 export const data = {
-	name: "embed",
+	name: "send-embed",
 	description: "Test an embed"
 }
 

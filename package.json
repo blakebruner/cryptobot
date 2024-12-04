@@ -1,0 +1,17 @@
+{
+	"name": "crypto-bot",
+	"description": "A bot made with Bun",
+	"version": "1.0",
+	"type": "module",
+	"main": "./src/index.js",
+	"scripts": {
+		"start": "bun ."
+	},
+	"dependencies": {
+		"commandkit": "^0.1.10",
+		"discord.js": "^14.16.3"
+	},
+	"devDependencies": {
+		"bun-types": "^1.1.38"
+	}
+}

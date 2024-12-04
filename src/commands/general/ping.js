@@ -1,3 +1,4 @@
+const { EmbedBuilder } = require('discord.js');
 /** @type {import("commandkit").CommandData}  */
 export const data = {
 	name: "ping",
@@ -8,8 +9,6 @@ export const data = {
  * @param {import("commandkit").SlashCommandProps} param0 
  */
 export const run = ({ interaction, client }) => {
-	// at the top of your file
-	const { EmbedBuilder } = require('discord.js');
 
 	// inside a command, event listener, etc.
 	const exampleEmbed = new EmbedBuilder()

@@ -1,9 +1,9 @@
 // at the top of your file
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from "discord.js"
 
 /** @type {import("commandkit").CommandData}  */
 export const data = {
-	name: "send-embed",
+	name: "embed",
 	description: "Test an embed"
 }
 

@@ -22,7 +22,7 @@ export const run = async ({ interaction, client }) => {
 		// we need a uuid so every select is unique, this will replace {0} in the custom_id
 		replacements: [randomUUID()]
 	})
-	// finnally, send the data - empheeral means only the user can see it
+	// finnally, send the data - ephemeral means only the user can see it
 	await interaction.reply({
 		embeds: [embed],
 		components: [stringSelect],

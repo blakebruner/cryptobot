@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js"
 import { CommandKit } from "commandkit"
-// import { success, error } from "@paperdave/logger"
-// import { mongoose } from "mongoose"
+import { success, error } from "@paperdave/logger"
+import { mongoose } from "mongoose"
 // import "@utils/error"
 
 const client = new Client({
@@ -30,11 +30,11 @@ new CommandKit({
 	bulkRegister: true
 });
 
-// mongoose.set("strictQuery", false)
-// await mongoose.connect(process.env.DB_STRING).then(() => {
-// 	success("Connected to MongoDB")
-// }).catch(err => {
-// 	error(err)
-// })
+mongoose.set("strictQuery", false)
+await mongoose.connect(process.env.DB_STRING).then(() => {
+	success("Connected to MongoDB")
+}).catch(err => {
+	error(err)
+})
 
 client.login(process.env.TOKEN);

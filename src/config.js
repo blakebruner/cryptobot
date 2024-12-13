@@ -40,7 +40,7 @@ export const EMBED = {
 	panels: {
 		setup: {
 			title: "Admin Panel",
-			description: "Click the menu below and select the **category**!",
+			description: "Click the menu below and select the **action** you require!",
 		}
 	},
 }

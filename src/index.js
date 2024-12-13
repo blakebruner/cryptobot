@@ -2,7 +2,6 @@ import { Client, GatewayIntentBits, Partials } from "discord.js"
 import { CommandKit } from "commandkit"
 import { success, error } from "@paperdave/logger"
 import { mongoose } from "mongoose"
-// import "@utils/error"
 
 const client = new Client({
 	intents: [

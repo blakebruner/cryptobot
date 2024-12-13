@@ -9,16 +9,22 @@ export default async (interaction) => {
 	if (category !== "panels") {
 		return
 	}
+	// ensure it's from a string select
+	if (!interaction.isStringSelectMenu()) {
+		return
+	}
+	// the action is the value of whatever the user chooses in the string select
+	const [action] = interaction.values
 	// handle the admin setup and user lookup differently
 	switch (type) {
 		case "setup": {
 			// admin here
-			console.log("setup")
+			console.log(`setup ${action}`)
 			break
 		}
 		case "lookup": {
 			// user here
-			console.log("lookup")
+			console.log(`lookup ${action}`)
 			break
 		}
 	}

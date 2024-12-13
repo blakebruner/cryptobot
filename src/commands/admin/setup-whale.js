@@ -1,5 +1,4 @@
-import { ApplicationCommandOptionType, ChannelType } from "discord.js"
-import { CURRENCY_MAP } from "@utils/parsed"
+import { ApplicationCommandOptionType } from "discord.js"
 import { createWhale } from "@repos/whale"
 
 export const data = {

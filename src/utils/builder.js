@@ -1,5 +1,5 @@
 import { ComponentType, GuildMember, User } from "discord.js"
-import { EMBED } from "@main/config"
+import { EMBED, STRING_SELECT } from "@main/config"
 import { PROJECT, parseHexColor } from "@utils/parsed"
 
 const localeRegex = /{(\d+)}/g
@@ -44,6 +44,26 @@ export function buildEmbed({ path, user, replacements = [], overrides }) {
 		Object.assign(embed, overrides)
 	}
 	return embed
+}
+
+export function buildStringSelect({ path, options = [], replacements = [] }) {
+	const { custom_id, placeholder } = resultFromPath(STRING_SELECT, path, replacements)
+	if (options instanceof Map) {
+		options = [...options.values()]
+	}
+	return {
+		type: ComponentType.ActionRow,
+		components: [
+			{
+				type: ComponentType.StringSelect,
+				custom_id,
+				placeholder,
+				options: [
+					...options
+				]
+			},
+		]
+	}
 }
 
 function resultFromPath(obj, path, replacements) {

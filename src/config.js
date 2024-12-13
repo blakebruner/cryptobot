@@ -15,7 +15,21 @@ export const CONFIG = {
 			value: "solana",
 			abbreviation: "SOL",
 		},
-	]
+	],
+	panels: {
+		setup: {
+			actions: [
+				{
+					label: "Create Observed",
+					value: "create",
+					description: "Create an observed entity",
+					emoji: {
+						name: "✅",
+					},
+				},
+			],
+		},
+	}
 }
 
 export const EMBED = {
@@ -27,6 +41,15 @@ export const EMBED = {
 		setup: {
 			title: "Admin Panel",
 			description: "Click the menu below and select the **category**!",
+		}
+	},
+}
+
+export const STRING_SELECT = {
+	panels: {
+		setup: {
+			custom_id: "panels|setup|{0}",
+			placeholder: "📌 Select an action..",
 		}
 	},
 }

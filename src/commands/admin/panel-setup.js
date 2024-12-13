@@ -1,5 +1,8 @@
-import { ApplicationCommandOptionType } from "discord.js"
-import { buildEmbed } from "@utils/builder"
+import { buildEmbed, buildStringSelect } from "@utils/builder"
+import { randomUUID } from "crypto"
+import { CONFIG } from "@main/config"
+
+const setupActions = CONFIG.panels.setup.actions
 
 export const data = {
 	name: "panel-setup",
@@ -7,14 +10,22 @@ export const data = {
 }
 
 export const run = async ({ interaction, client }) => {
-	// const { options } = interaction
-	// const commandValue = options.get("name").value
-	// await createWhale(commandValue)
+	// create an embed from the path in EMBED (config.js)
 	const embed = buildEmbed({
 		path: "panels-setup",
 	})
+	// create a stringSelect from the path in STRING_SELECT (config.js)
+	const stringSelect = buildStringSelect({
+		path: "panels-setup",
+		// we get the actions from the CONFIG, cached at the top of this file
+		options: setupActions,
+		// we need a uuid so every select is unique, this will replace {0} in the custom_id
+		replacements: [randomUUID()]
+	})
+	// finnally, send the data - empheeral means only the user can see it
 	await interaction.reply({
 		embeds: [embed],
+		components: [stringSelect],
 		ephemeral: true,
 	})
 }

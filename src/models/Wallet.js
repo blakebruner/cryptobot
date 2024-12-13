@@ -1,9 +1,5 @@
 import { Schema, model } from "mongoose"
 
-const currencyType = {
-
-}
-
 const transaction = {
 
 }

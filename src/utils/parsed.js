@@ -19,10 +19,10 @@ export const CURRENCY_MAP = parseCurrency(CURRENCY_ARR)
 function parseCurrency(currArr) {
 	const map = new Map()
 	currArr.forEach(curr => {
-		const { name, value } = curr
+		const { value, ...rest } = curr
 		map.set(value, {
-			name,
 			value,
+			...rest,
 		})
 	})
 	return map

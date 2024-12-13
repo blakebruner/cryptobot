@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from "discord.js"
-import { getWhale } from "@repos/whale"
+import { whaleArr, getWhale } from "@repos/whale"
 
 export const data = {
   name: "setup-whale-wallet",
@@ -11,14 +11,20 @@ export const data = {
       type: ApplicationCommandOptionType.String,
       required: true,
       choices: [
-        
+        ...whaleArr
       ]
     },
   ]
 }
 
 export const run = async ({ interaction, client }) => {
-
+  const { options } = interaction
+  const commandValue = options.get("name").value
+  const whale = await getWhale(commandValue)
+  await interaction.reply({
+    content: `Selected Whale: ${whale.name}!`,
+    ephemeral: true,
+  })
 }
 
 export const options = {

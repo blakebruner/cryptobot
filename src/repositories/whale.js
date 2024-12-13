@@ -1,48 +1,47 @@
 import { Whale } from "@models/Whale"
 
+// blockdaemon.com
+
 let whaleMap = new Map()
+export let whaleArr = []
 
 export async function createWhale(name) {
+	await initWhaleMap()
 	const whaleObj = new Whale({ name })
 	await whaleObj.save()
-	await validateWhale(whaleObj)
 	whaleMap.set(name, whaleObj)
+	whaleArr.push(formatWhaleChoice(whaleObj))
 	return whaleObj
 }
-export async function getWhaleArr(){
-	return whaleMap.values()
+
+export async function getWhale(name) {
+	await initWhaleMap()
+	return whaleMap.get(name)
 }
 
-export async function getWhale(name){
-	let whaleObj = whaleMap.get(name)
-	if (!whaleObj){
-		await validateWhale(name)
-		whaleObj = whaleMap.get(name)
+function formatWhaleChoice(whaleObj) {
+	const { name } = whaleObj
+	return {
+		name,
+		value: name,
 	}
-	return whaleObj
 }
 
-async function validateWhale(whaleObj){
-
+async function initWhaleMap() {
 	if (whaleMap.size > 0) {
 		return
-	} 
-	if (!(whaleObj instanceof Object)) {
-		whaleObj = await Whale.findOne({whaleObj})
 	}
-	if (!whaleObj) {
-		return
-	}
-	const { name } = whaleObj
 	const whaleDataArr = await Whale.find({})
 	if (whaleDataArr.length == 0) {
-		whaleMap.set(name, whaleObj)
 		return
 	}
-	const whaleArr = []
+	const whaleMapLocal = new Map()
+	const whaleArrLocal = []
 	whaleDataArr.forEach(whale => {
-		const { name } = whale 
-		whaleArr.push([name, whale])
+		const { name } = whale
+		whaleMapLocal.set(name, whale)
+		whaleArrLocal.push(formatWhaleChoice(whale))
 	})
-	whaleMap = new Map(whaleArr)
+	whaleMap = whaleMapLocal
+	whaleArr = whaleArrLocal
 }

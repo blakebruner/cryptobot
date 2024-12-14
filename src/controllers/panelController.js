@@ -89,7 +89,11 @@ export const panelEditController = async (interaction, name) => {
 				path: "panels-admin-addwallet",
 				replacements: [name]
 			})
-			const panelActions = buildOptionList(getCurrencyArr())
+			const panelActions = buildOptionList({
+				arr: getCurrencyArr(),
+				path: "panels-actions-back",
+				replacements: ["edit"]
+			})
 			const stringSelect = buildStringSelect({
 				path: "panels-addwallet",
 				options: panelActions,

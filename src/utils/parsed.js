@@ -1,9 +1,9 @@
-import { success, error } from "@paperdave/logger"
 import { CONFIG } from "@main/config"
 
-const { project, currencies } = CONFIG
+const { project, currencies, builder, panels } = CONFIG
 
 export const PROJECT = parseProject(project)
+export const PANEL_ACTIONS = panels.actions
 
 function parseProject(project) {
 	const { color, ...args } = project
@@ -12,6 +12,9 @@ function parseProject(project) {
 		...args,
 	}
 }
+
+export const EMOJIS = builder.emojis
+export const EMOJIS_COUNT = EMOJIS.count
 
 export const CURRENCY_ARR = [...currencies]
 export const CURRENCY_MAP = parseCurrency(CURRENCY_ARR)
@@ -28,8 +31,7 @@ function parseCurrency(currArr) {
 	return map
 }
 
-export function parseHexColor(color) {
-	return parseInt(color.replace("#", ""), 16);
-}
 
-success("Config loaded successfully!")
+export function parseHexColor(color) {
+	return parseInt(color.replace("#", ""), 16)
+}

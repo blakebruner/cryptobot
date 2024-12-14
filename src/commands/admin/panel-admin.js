@@ -1,8 +1,4 @@
-import { buildEmbed, buildStringSelect } from "@utils/builder"
-import { randomUUID } from "crypto"
-import { CONFIG } from "@main/config"
-
-const homeActions = CONFIG.panels.admin.home.actions
+import { buildEmbed, buildStringSelect, buildPanelActions } from "@utils/builder"
 
 export const data = {
 	name: "panel-admin",
@@ -12,15 +8,15 @@ export const data = {
 export const run = async ({ interaction, client }) => {
 	// create an embed from the path in EMBED (config.js)
 	const embed = buildEmbed({
-		path: "panels-admin",
+		path: "panels-admin-home",
+	})
+	const panelActions = buildPanelActions({
+		path: "admin",
 	})
 	// create a stringSelect from the path in STRING_SELECT (config.js)
 	const stringSelect = buildStringSelect({
 		path: "panels-admin",
-		// we get the actions from the CONFIG, cached at the top of this file, send the homeAction for init
-		options: homeActions,
-		// replace the placeholder in the stringSelect with the current menu state (home is default)
-		replacements: ["home"]
+		options: panelActions,
 	})
 	// finally, send the data - ephemeral means only the user can see it
 	await interaction.reply({

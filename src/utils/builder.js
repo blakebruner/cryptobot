@@ -1,8 +1,9 @@
 import { ComponentType, GuildMember, User } from "discord.js"
-import { EMBED, STRING_SELECT, MODAL } from "@main/config"
-import { PROJECT, parseHexColor } from "@utils/parsed"
+import { CONFIG, EMBED, STRING_SELECT, MODAL } from "@main/config"
+import { PROJECT, EMOJIS_COUNT, PANEL_ACTIONS, parseHexColor } from "@utils/parsed"
 
 const localeRegex = /{(\d+)}/g
+
 const { name: projectName, color: projectColor, imageUrl: projectImageUrl } = PROJECT
 
 export function buildEmbed({ path, user, replacements = [], overrides }) {
@@ -66,6 +67,25 @@ export function buildStringSelect({ path, options = [], replacements = [] }) {
 	}
 }
 
+export function buildOptionList(arr) {
+	arr.map((item, index) => {
+		if (typeof item !== "object") {
+			// TODO: could handle this later, for now skip non objects
+			return
+		}
+		let { emoji, ...rest } = item
+		if (!emoji) {
+			emoji = {
+				name: EMOJIS_COUNT[index],
+			}
+		}
+		return {
+			...rest,
+			emoji,
+		}
+	})
+}
+
 export function buildModal({ path, replacements = [] }) {
 	const { custom_id, title, components } = resultFromPath(MODAL, path, replacements)
 	const buildComponents = components.map(component => {
@@ -89,19 +109,36 @@ export function buildModal({ path, replacements = [] }) {
 	}
 }
 
+export function buildPanelActions({ path, replacements = [] }) {
+	const actions = resultFromPath(PANEL_ACTIONS, path, replacements)
+	return actions
+}
+
 function resultFromPath(obj, path, replacements) {
-	let result = path.split("-").reduce((acc, key) => acc[key], obj)
-	if (typeof result === "object") {
-		// deep clone to not override
-		result = structuredClone(result)
-	}
-	if (typeof result !== "object") {
-		return result
-	}
-	for (const [key, val] of Object.entries(result)) {
-		if (typeof val === "string") {
-			result[key] = replaceRegex(val, replacements)
+	// replace strings inside an object
+	const loopItem = (item) => {
+		for (const key in item) {
+			// ensure we're not modifying the prototype
+			if (item.hasOwnProperty(key) && typeof item[key] === "string") {
+				item[key] = replaceRegex(item[key], replacements)
+			}
 		}
+		return item
+	}
+	// get value from object using path
+	let result = path.split("-").reduce((acc, key) => acc?.[key], obj)
+	// handle arrays
+	if (Array.isArray(result)) {
+		result.forEach((res, index) => {
+			if (typeof res === "object" && res !== null) {
+				// Clone the object before modifying
+				result[index] = loopItem(structuredClone(res))
+			}
+		})
+	}
+	// handle objects
+	if (result && typeof result === "object") {
+		result = loopItem(structuredClone(result))
 	}
 	return result
 }

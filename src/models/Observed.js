@@ -1,29 +1,12 @@
 import { Schema, model } from "mongoose"
 
-const Wallet = {
-	currency: {
-		type: String
-	},
-	address: {
-		type: String
-	},
-	lastUpdate: {
-		type: Date,
-		default: Date.now
-	},
-	// transactions: {
-	//   type: [transaction]
-	// }
-}
-
 export const Observed = model("Observed", new Schema({
 	name: {
 		type: String
 	},
-	crypto: {
-		type: Map,
-		of: Wallet,
-		default: new Map()
+	crypto: { // Reference to Wallet schema (_id)
+		type: Schema.Types.ObjectId,
+		ref: "Wallet"
 	},
 	socials: {
 		type: Map,
@@ -34,4 +17,4 @@ export const Observed = model("Observed", new Schema({
 		type: Boolean,
 		default: true
 	},
-}));
+}))

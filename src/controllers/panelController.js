@@ -1,9 +1,10 @@
-import { buildEmbed, buildStringSelect, buildModal } from "@utils/builder"
-import { createObserved, deleteObserved } from "@repos/observed"
+import { buildEmbed, buildStringSelect, buildModal, buildPanelActions } from "@utils/builder"
+import { createObserved, deleteObserved, getObserved } from "@repos/observed"
+import { getCurrencyArr } from "@repos/wallet"
 import { getModalValues } from "@utils/interact"
 import { randomUUID } from "crypto"
 
-export const panelModalController = async (interaction) => {
+export const panelAdminController = async (interaction) => {
 	let modalValues
 	if (interaction.isModalSubmit()) {
 		// if it's a modal submit, get the values
@@ -36,10 +37,31 @@ export const panelModalController = async (interaction) => {
 				ephemeral: true,
 			})
 		},
-		handleModify: async () => {
+		handleEdit: async () => {
 			const { name } = modalValues
+			const observed = await ensureObservedExists(interaction, name)
+			if (!observed) {
+				return
+			}
+			// create an embed from the path in EMBED (config.js)
+			const embed = buildEmbed({
+				path: "panels-admin-edit",
+				replacements: [name]
+			})
+			const panelActions = buildPanelActions({
+				path: "edit",
+				replacements: [name]
+			})
+			const stringSelect = buildStringSelect({
+				path: "panels-admin",
+				options: panelActions,
+				// replace the placeholder in the stringSelect with the current menu state
+				replacements: ["edit"]
+			})
+			// finally, send the data - ephemeral means only the user can see it
 			await interaction.reply({
-				content: `Modified Observed: ${name}!`,
+				embeds: [embed],
+				components: [stringSelect],
 				ephemeral: true,
 			})
 		},
@@ -50,6 +72,48 @@ export const panelModalController = async (interaction) => {
 				content: `Deleted Observed: ${name}!`,
 				ephemeral: true,
 			})
+		}
+	}
+}
+
+export const panelEditController = async (interaction, name) => {
+	// always ensure that the observed entity exists
+	const observed = await ensureObservedExists(name, interaction)
+	if (!observed) {
+		return
+	}
+	return {
+		handleWalletAdd: async () => {
+			// TODO: modify embed to show different wallet types
+			const embed = buildEmbed({
+				path: "panels-admin-addwallet",
+				replacements: [name]
+			})
+			const panelActions = buildOptionList(getCurrencyArr())
+			const stringSelect = buildStringSelect({
+				path: "panels-addwallet",
+				options: panelActions,
+				// replace the placeholder in the stringSelect with the current menu state
+				replacements: ["edit"]
+			})
+			// finally, update the current message with the new data
+			await interaction.editReply({
+				embeds: [embed],
+				components: [stringSelect],
+				ephemeral: true,
+			})
 		},
 	}
+}
+
+async function ensureObservedExists(interaction, name) {
+	const observed = await getObserved(name)
+	if (!observed) {
+		await interaction.reply({
+			content: `Observed: ${name} does not exist!`,
+			ephemeral: true,
+		})
+		return
+	}
+	return observed
 }

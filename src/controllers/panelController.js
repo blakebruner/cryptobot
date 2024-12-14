@@ -1,4 +1,4 @@
-import { buildEmbed, buildStringSelect, buildModal, buildPanelActions } from "@utils/builder"
+import { buildEmbed, buildStringSelect, buildModal, buildPanelActions, buildOptionList } from "@utils/builder"
 import { createObserved, deleteObserved, getObserved } from "@repos/observed"
 import { getCurrencyArr } from "@repos/wallet"
 import { getModalValues } from "@utils/interact"
@@ -78,7 +78,7 @@ export const panelAdminController = async (interaction) => {
 
 export const panelEditController = async (interaction, name) => {
 	// always ensure that the observed entity exists
-	const observed = await ensureObservedExists(name, interaction)
+	const observed = await ensureObservedExists(interaction, name)
 	if (!observed) {
 		return
 	}
@@ -97,7 +97,7 @@ export const panelEditController = async (interaction, name) => {
 				replacements: ["edit"]
 			})
 			// finally, update the current message with the new data
-			await interaction.editReply({
+			await interaction.update({
 				embeds: [embed],
 				components: [stringSelect],
 				ephemeral: true,

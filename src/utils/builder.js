@@ -73,9 +73,9 @@ export function buildOptionList(arr) {
 			// TODO: could handle this later, for now skip non objects
 			return
 		}
-		let { emoji, ...rest } = item
+		let { emoji, description, ...rest } = item
 		if (!emoji) {
-			emoji = {
+			item.emoji = {
 				name: EMOJIS_COUNT[index],
 			}
 		}
@@ -84,6 +84,9 @@ export function buildOptionList(arr) {
 			emoji,
 		}
 	})
+	// TODO: add a back button here for previous menu state
+	// could just make another function, then when implemented append to the array
+	return arr
 }
 
 export function buildModal({ path, replacements = [] }) {

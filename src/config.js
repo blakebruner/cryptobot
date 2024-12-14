@@ -35,12 +35,12 @@ export const CONFIG = {
 		{
 			label: "Bitcoin",
 			value: "bitcoin",
-			abbreviation: "BTC",
+			description: "Click to select BTC",
 		},
 		{
 			label: "Solana",
 			value: "solana",
-			abbreviation: "SOL",
+			description: "Click to select SOL",
 		},
 	],
 	panels: {

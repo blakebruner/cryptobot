@@ -36,7 +36,7 @@ export default async (interaction) => {
 		const [action, name] = interaction.values[0].split("|")
 		// path is to locate the object in the config
 		const path = `${category}-${type}-${action}`
-		console.log(path)
+		console.log("path: " + path)
 		// if no name, we know it's just an admin panel action
 		if (!name) {
 			return panelAdminActions.fetchObserved(path)
@@ -45,7 +45,7 @@ export default async (interaction) => {
 		const panelEditActions = await panelEditController(interaction, name)
 		switch (action) {
 			case "addwallet": {
-				return panelEditActions.handleWalletAdd(name)
+				return panelEditActions.handleWalletAdd()
 			}
 		}
 		console.log(action, name)

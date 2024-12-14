@@ -24,11 +24,8 @@
 		"noPropertyAccessFromIndexSignature": false,
 		"baseUrl": "./",
 		"paths": {
-			"@discord": [
-				"src/utils/discord"
-			],
-			"@handlers": [
-				"src/handlers/index"
+			"@controllers/*": [
+				"src/controllers/*"
 			],
 			"@repos/*": [
 				"src/repositories/*"

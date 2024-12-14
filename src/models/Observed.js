@@ -1,5 +1,20 @@
 import { Schema, model } from "mongoose"
-import { Wallet } from "@models/Wallet"
+
+const Wallet = {
+	currency: {
+		type: String
+	},
+	address: {
+		type: String
+	},
+	lastUpdate: {
+		type: Date,
+		default: Date.now
+	},
+	// transactions: {
+	//   type: [transaction]
+	// }
+}
 
 export const Observed = model("Observed", new Schema({
 	name: {

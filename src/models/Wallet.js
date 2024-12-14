@@ -1,9 +1,5 @@
 import { Schema, model } from "mongoose"
 
-const transaction = {
-
-}
-
 export const Wallet = model("Wallet", new Schema({
   currency: {
     type: String
@@ -13,9 +9,9 @@ export const Wallet = model("Wallet", new Schema({
   },
   lastUpdate: {
     type: Date,
-    defualt: Date.now
+    default: Date.now
   },
-  transactions: {
-    type: [transaction]
-  }
+  // transactions: {
+  //   type: [transaction]
+  // }
 }))

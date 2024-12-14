@@ -1,5 +1,5 @@
 import { ComponentType, GuildMember, User } from "discord.js"
-import { EMBED, STRING_SELECT } from "@main/config"
+import { EMBED, STRING_SELECT, MODAL } from "@main/config"
 import { PROJECT, parseHexColor } from "@utils/parsed"
 
 const localeRegex = /{(\d+)}/g
@@ -62,6 +62,29 @@ export function buildStringSelect({ path, options = [], replacements = [] }) {
 					...options
 				]
 			},
+		]
+	}
+}
+
+export function buildModal({ path, replacements = [] }) {
+	const { custom_id, title, components } = resultFromPath(MODAL, path, replacements)
+	const buildComponents = components.map(component => {
+		if (typeof component === "string") {
+			// need to traverse these by default for replacements
+			component = resultFromPath(MODAL, component, replacements)
+		}
+		return {
+			type: ComponentType.ActionRow,
+			components: [
+				component,
+			]
+		}
+	})
+	return {
+		custom_id,
+		title,
+		components: [
+			...buildComponents
 		]
 	}
 }

@@ -2,46 +2,55 @@ import { Observed } from "@models/Observed"
 
 // blockdaemon.com
 
-let obsMap = new Map()
-export let obsArr = []
+// lazy load
+let observedCache = new Map()
 
 export async function createObserved(name) {
-	await initObservedMap()
-	const obsObj = new Observed({ name })
-	await obsObj.save()
-	obsMap.set(name, obsObj)
-	obsArr.push(formatObsChoice(obsObj))
-	return obsObj
+	await ensureObservedCache()
+	if (observedCache.has(name)) {
+		// already exists
+		return
+	}
+	const observed = new Observed({ name })
+	await observed.save()
+	observedCache.set(name, observed)
+	return observed
+}
+
+export async function deleteObserved(name) {
+	await ensureObservedCache()
+	const observed = observedCache.get(name)
+	if (!observed) {
+		// does not exist
+		return
+	}
+	await Observed.deleteOne({ name })
+	observedCache.delete(name)
 }
 
 export async function getObserved(name) {
-	await initObservedMap()
-	return obsMap.get(name)
+	await ensureObservedCache()
+	return observedCache.get(name)
 }
 
-function formatObsChoice(obsObj) {
-	const { name } = obsObj
-	return {
-		name,
-		value: name,
+// -- internal functions
+
+async function ensureObservedCache() {
+	if (observedCache.size > 0) {
+		return
 	}
+	await populateObservedMap()
 }
 
-async function initObservedMap() {
-	if (obsMap.size > 0) {
+async function populateObservedMap() {
+	const observedDataArr = await Observed.find({})
+	if (observedDataArr.length == 0) {
 		return
 	}
-	const obsDataArr = await Observed.find({})
-	if (obsDataArr.length == 0) {
-		return
-	}
-	const obsMapLocal = new Map()
-	const obsArrLocal = []
-	obsDataArr.forEach(obs => {
+	const mapLocal = new Map()
+	observedDataArr.forEach(obs => {
 		const { name } = obs
-		obsMapLocal.set(name, obs)
-		obsArrLocal.push(formatObsChoice(obs))
+		mapLocal.set(name, obs)
 	})
-	obsMap = obsMapLocal
-	obsArr = obsArrLocal
+	observedCache = mapLocal
 }

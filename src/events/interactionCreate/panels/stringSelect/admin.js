@@ -1,4 +1,4 @@
-import { panelFetchObserved, panelEditSelectActions } from "@controllers/panels"
+import { panelPromptModal, panelEditSelectActions } from "@controllers/panels"
 import { createPanelPath } from "@repos/panels"
 
 export default async (interaction) => {
@@ -20,5 +20,5 @@ export default async (interaction) => {
 	const [action] = interaction.values[0].split("|")
 	// path is to locate the object in the config
 	const path = createPanelPath(panelType, action)
-	return panelFetchObserved(interaction, path)
+	return panelPromptModal(interaction, path)
 }

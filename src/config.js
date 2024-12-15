@@ -185,6 +185,22 @@ export const MODAL = {
 				components: ["generic-observed"],
 			},
 		},
+		edit: {
+			addcurrency: {
+				title: "Adding Wallet » ({1})",
+				custom_id: "panels|edit|addcurrency|{0}|{2}",
+				components: [
+					{
+						type: ComponentType.TextInput,
+						custom_id: "address",
+						label: "Enter Wallet Address",
+						style: TextInputStyle.Short,
+						required: true,
+						max_length: 64,
+					},
+				],
+			},
+		},
 	},
 }
 

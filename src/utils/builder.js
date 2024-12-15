@@ -65,14 +65,15 @@ export function buildStringSelect({ path, options = [], replacements = [] }) {
 	}
 }
 
-export function buildOptionList({ arr, path, replacements = [] }) {
+export function buildOptionList({ arr, action, replacements = [], replaceDirection }) {
+	const replacementsLength = replacements.length
 	let optionList = []
 	arr.forEach((item, index) => {
 		if (typeof item !== "object") {
 			// TODO: could handle this later, for now skip non objects
 			return
 		}
-		let { emoji, ...rest } = item
+		const { emoji, value, ...rest } = item
 		const option = {
 			...rest,
 		}
@@ -81,13 +82,17 @@ export function buildOptionList({ arr, path, replacements = [] }) {
 				name: builderIteratorArr[index],
 			}
 		}
+		// if replacements exist, this will add the replacement points like custom_id
+		if (replacementsLength > 0) {
+			option.value = addReplacementPoints(value, replacements, replaceDirection)
+		}
 		optionList.push(option)
 	})
 	// since we know this an array, we can override the path and use the replacements
 	optionList = resultFromPath(optionList, false, replacements)
-	// path is the key, since we're only appending from builderActions
-	if (path) {
-		const appendComponent = resultFromPath(builderActions, path, replacements)
+	// action is the key, since we're only appending from builderActions, works as a path
+	if (action) {
+		const appendComponent = resultFromPath(builderActions, action, replacements)
 		optionList.push(appendComponent)
 	}
 	return optionList
@@ -159,4 +164,17 @@ function replaceRegex(text, args) {
 		// get the value from the args array
 		return args[matchNum]
 	})
+}
+
+function addReplacementPoints(value, replacements, replaceDirection) {
+	if (!replacements.length || !replaceDirection) {
+		return value
+	}
+	// direction is either front or back, for |{0} or {0}|
+	switch (replaceDirection) {
+		case "back":
+			return value + replacements.map((_, index) => `|{${index}}`).join("")
+		case "front":
+			return replacements.map((_, index) => `{${index}}|`).join("") + value
+	}
 }

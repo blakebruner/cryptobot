@@ -16,12 +16,17 @@ export default async (interaction) => {
 	if (!interaction.isStringSelectMenu()) {
 		return
 	}
-	// action (panel action clicked)
-	const [action] = interaction.values[0].split("|")
-	const panelEditActions = await panelEditSelectActions(interaction, panelType, name)
+	// action (panel action clicked) | arg (if needed)
+	const [action, arg] = interaction.values[0].split("|")
+	const panelEditActions = await panelEditSelectActions(interaction, panelType, name, action)
+	console.log("edit action: " + action)
 	switch (action) {
 		case "addwallet": {
 			return panelEditActions.handleWalletAdd()
+		}
+		case "addcurrency": {
+			// arg here is the currency
+			return panelEditActions.handleCurrencyAdd(arg)
 		}
 		case "back": {
 			return panelCreatePayload(interaction, panelType, {

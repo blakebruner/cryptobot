@@ -5,8 +5,8 @@ export default async (interaction) => {
 	if (!interaction.customId) {
 		return
 	}
-	// panels | panel_type | action (what user clicked) | arg (if needed)
-	const [category, panelType, action, arg] = interaction.customId.split("|")
+	// panels | panel_type | action (what user clicked)
+	const [category, panelType, action] = interaction.customId.split("|")
 	// ensure it's from a panel and is admin
 	if (category !== "panels" || panelType !== "admin") {
 		return

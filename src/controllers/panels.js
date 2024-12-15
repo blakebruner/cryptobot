@@ -1,10 +1,9 @@
 import { buildEmbed, buildStringSelect, buildModal, buildPanelActionList, buildOptionList } from "@utils/builder"
 import { createObserved, deleteObserved, getObserved } from "@repos/observed"
 import { getPanelDefaultPath, createPanelPath } from "@repos/panels"
-import { currencyArr } from "@repos/wallet"
+import { currencyArr, getCurrency } from "@repos/wallet"
 import { getModalValues } from "@utils/interact"
 import { randomUUID } from "crypto"
-import { type } from "os"
 
 // -- modal actions
 
@@ -48,29 +47,60 @@ export const panelAdminModalActions = async (interaction) => {
 	}
 }
 
+export const panelEditModalActions = async (interaction) => {
+	// only handle admin modal interactions
+	const modalValues = getModalValues(interaction)
+	return {
+		handleCurrencyAdd: async () => {
+			const { address } = modalValues
+			await interaction.reply({
+				content: `Added wallet: ${address}!`,
+				ephemeral: true,
+			})
+		},
+	}
+}
+
 // -- string select actions
 
-export const panelEditSelectActions = async (interaction, panelType, name) => {
+export const panelEditSelectActions = async (interaction, panelType, name, action) => {
 	// always ensure that the observed entity exists
 	const observed = await ensureObservedExists(interaction, name)
 	if (!observed) {
 		return
 	}
+	// path is to locate the object in the config
+	const path = createPanelPath(panelType, action)
 	return {
 		handleWalletAdd: async () => {
 			// options callback for payload
 			const options = () => {
 				return buildOptionList({
 					arr: currencyArr,
-					path: "back"
+					action: "back",
+					replacements: ["addcurrency"], // append addcurrency to front, so when user selects back, it goes back to addcurrency
+					replaceDirection: "front",
 				})
 			}
 			return panelCreatePayload(interaction, panelType, {
-				path: "addwallet",
+				path: action,
 				replacements: [name],
 				options,
 				update: true,
 			})
+		},
+		handleCurrencyAdd: async (currency) => {
+			// ensure currency exists
+			currency = getCurrency(currency)
+			if (!currency) {
+				await interaction.reply({
+					content: `Currency: ${currency} does not exist!`,
+					ephemeral: true,
+				})
+				return
+			}
+			const { label } = currency
+			return panelPromptModal(interaction, path, [randomUUID(), label, name])
 		},
 	}
 }
@@ -116,10 +146,10 @@ export async function panelCreatePayload(interaction, panelType, { path, replace
 	await interaction.reply(response)
 }
 
-export async function panelFetchObserved(interaction, path) {
+export async function panelPromptModal(interaction, path, replacements = [randomUUID()]) {
 	const modal = buildModal({
 		path,
-		replacements: [randomUUID()]
+		replacements
 	})
 	await interaction.showModal(modal)
 	// reset string select

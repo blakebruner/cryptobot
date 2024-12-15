@@ -65,7 +65,7 @@ export function buildStringSelect({ path, options = [], replacements = [] }) {
 	}
 }
 
-export function buildOptionList({ arr, action, replacements = [] }) {
+export function buildOptionList({ arr, path, replacements = [] }) {
 	arr.map((item, index) => {
 		if (typeof item !== "object") {
 			// TODO: could handle this later, for now skip non objects
@@ -82,9 +82,9 @@ export function buildOptionList({ arr, action, replacements = [] }) {
 			emoji,
 		}
 	})
-	// action is the key, since we're only appending from builderActions
-	if (action) {
-		const appendComponent = resultFromPath(builderActions, action, replacements)
+	// path is the key, since we're only appending from builderActions
+	if (path) {
+		const appendComponent = resultFromPath(builderActions, path, replacements)
 		arr.push(appendComponent)
 	}
 	return arr
@@ -133,7 +133,6 @@ function resultFromPath(obj, path, replacements) {
 			if (typeof res === "object" && res !== null) {
 				// Clone the object before modifying
 				result[index] = loopItem(structuredClone(res))
-				console.log(`${index} : ${result[index]}`)
 			}
 		})
 	}

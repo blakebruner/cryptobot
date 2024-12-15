@@ -8,7 +8,7 @@ export const data = {
 export const run = async ({ interaction, client }) => {
 	// create an embed from the path in EMBED (config.js)
 	const embed = buildEmbed({
-		path: "panels-admin-home",
+		path: "panels-admin-admin",
 	})
 	const panelActions = buildPanelActionList({
 		panelType: "admin",

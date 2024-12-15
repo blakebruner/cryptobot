@@ -9,9 +9,9 @@ export const PROJECT = {
 export const BUILDER = {
 	actions: {
 		back: {
-			label: "back",
+			label: "Go Back",
 			value: "back|{0}|{1}",
-			description: "Back to previous menu",
+			description: "Go back to the previous menu",
 			emoji: {
 				name: "⬅️",
 			},
@@ -116,7 +116,7 @@ export const PANELS = {
 export const EMBED = {
 	panels: {
 		admin: {
-			home: {
+			admin: {
 				title: "Admin Panel",
 				description:
 					"Click the menu below and select the **action** you require!",

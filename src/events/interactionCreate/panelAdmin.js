@@ -32,8 +32,8 @@ export default async (interaction) => {
 		}
 	}
 	if (interaction.isStringSelectMenu()) {
-		// action (panel action clicked) | name (observed entity selected)
-		const [action, name] = interaction.values[0].split("|")
+		// action (panel action clicked) | name (observed entity selected) | arg (if needed)
+		const [action, name, arg] = interaction.values[0].split("|")
 		// path is to locate the object in the config
 		const path = `${category}-${type}-${action}`
 		console.log("path: " + path)
@@ -41,14 +41,18 @@ export default async (interaction) => {
 		if (!name) {
 			return panelAdminActions.fetchObserved(path)
 		}
+		// check if we need to go back to previous menu
 		// now we know it's an observed entity, so we can handle it, init the panelEditController
 		const panelEditActions = await panelEditController(interaction, name)
 		switch (action) {
 			case "addwallet": {
 				return panelEditActions.handleWalletAdd()
 			}
+			case "back": {
+				// arg is previous menu state
+				console.log(action, name, arg)
+			}
 		}
-		console.log(action, name)
 		// TODO: validate name still exists in cache
 		return
 	}

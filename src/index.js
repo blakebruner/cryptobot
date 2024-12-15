@@ -20,14 +20,14 @@ const client = new Client({
 		Partials.Message,
 		Partials.Reaction
 	]
-});
+})
 
 new CommandKit({
 	client,
 	commandsPath: `${import.meta.dir}/commands`,
 	eventsPath: `${import.meta.dir}/events`,
 	bulkRegister: true
-});
+})
 
 mongoose.set("strictQuery", false)
 await mongoose.connect(process.env.DB_STRING).then(() => {
@@ -36,4 +36,4 @@ await mongoose.connect(process.env.DB_STRING).then(() => {
 	error(err)
 })
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN)

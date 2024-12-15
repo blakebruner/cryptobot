@@ -1,4 +1,4 @@
-import { buildEmbed, buildStringSelect, buildPanelActions } from "@utils/builder"
+import { buildEmbed, buildStringSelect, buildPanelActionList } from "@utils/builder"
 
 export const data = {
 	name: "panel-admin",
@@ -10,8 +10,8 @@ export const run = async ({ interaction, client }) => {
 	const embed = buildEmbed({
 		path: "panels-admin-home",
 	})
-	const panelActions = buildPanelActions({
-		path: "admin",
+	const panelActions = buildPanelActionList({
+		panelType: "admin",
 	})
 	// create a stringSelect from the path in STRING_SELECT (config.js)
 	const stringSelect = buildStringSelect({

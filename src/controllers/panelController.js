@@ -1,6 +1,6 @@
-import { buildEmbed, buildStringSelect, buildModal, buildPanelActions, buildOptionList } from "@utils/builder"
+import { buildEmbed, buildStringSelect, buildModal, buildPanelActionList, buildOptionList } from "@utils/builder"
 import { createObserved, deleteObserved, getObserved } from "@repos/observed"
-import { getCurrencyArr } from "@repos/wallet"
+import { currencyArr } from "@repos/wallet"
 import { getModalValues } from "@utils/interact"
 import { randomUUID } from "crypto"
 
@@ -48,8 +48,8 @@ export const panelAdminController = async (interaction) => {
 				path: "panels-admin-edit",
 				replacements: [name]
 			})
-			const panelActions = buildPanelActions({
-				path: "edit",
+			const panelActions = buildPanelActionList({
+				panelType: "edit",
 				replacements: [name]
 			})
 			const stringSelect = buildStringSelect({
@@ -90,9 +90,9 @@ export const panelEditController = async (interaction, name) => {
 				replacements: [name]
 			})
 			const panelActions = buildOptionList({
-				arr: getCurrencyArr(),
-				path: "panels-actions-back",
-				replacements: ["edit"]
+				arr: currencyArr,
+				path: "back",
+				replacements: [name, "edit"]
 			})
 			const stringSelect = buildStringSelect({
 				path: "panels-addwallet",
@@ -120,4 +120,37 @@ async function ensureObservedExists(interaction, name) {
 		return
 	}
 	return observed
+}
+
+async function panelHandleCreate(interaction, name, panelName, update) {
+	const observed = await ensureObservedExists(interaction, name)
+	if (!observed) {
+		return
+	}
+	// create an embed from the path in EMBED (config.js)
+	const embed = buildEmbed({
+		path: "panels-admin-edit",
+		replacements: [name]
+	})
+	const panelActions = buildPanelActionList({
+		panelType: "edit",
+		replacements: [name]
+	})
+	const stringSelect = buildStringSelect({
+		path: "panels-admin",
+		options: panelActions,
+		// replace the placeholder in the stringSelect with the current menu state
+		replacements: ["edit"]
+	})
+	// finally, send the data - ephemeral means only the user can see it
+	const response = {
+		embeds: [embed],
+		components: [stringSelect],
+		ephemeral: true,
+	}
+	if (update) {
+		await interaction.update(response)
+		return
+	}
+	await interaction.reply(response)
 }

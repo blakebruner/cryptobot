@@ -1,10 +1,26 @@
 import { Wallet } from "@models/Wallet"
-import { CURRENCY_MAP, CURRENCY_ARR } from "@utils/parsed"
+import { WALLET } from "@main/config"
+
+// -- cache
+export const currencyArr = WALLET.currencies
+export const currencyMap = parseCurrency(currencyArr)
 
 export function getCurrency(currency) {
-	return CURRENCY_MAP.get(currency)
+	return currencyMap.get(currency)
 }
 
 export function getCurrencyArr() {
-	return CURRENCY_ARR
+	return currencyArr
+}
+
+function parseCurrency(arr) {
+	const map = new Map()
+	arr.forEach(curr => {
+		const { value, ...rest } = curr
+		map.set(value, {
+			value,
+			...rest,
+		})
+	})
+	return map
 }

@@ -66,28 +66,31 @@ export function buildStringSelect({ path, options = [], replacements = [] }) {
 }
 
 export function buildOptionList({ arr, path, replacements = [] }) {
-	arr.map((item, index) => {
+	let optionList = []
+	arr.forEach((item, index) => {
 		if (typeof item !== "object") {
 			// TODO: could handle this later, for now skip non objects
 			return
 		}
 		let { emoji, ...rest } = item
+		const option = {
+			...rest,
+		}
 		if (!emoji) {
-			item.emoji = {
+			option.emoji = {
 				name: builderIteratorArr[index],
 			}
 		}
-		return {
-			...rest,
-			emoji,
-		}
+		optionList.push(option)
 	})
+	// since we know this an array, we can override the path and use the replacements
+	optionList = resultFromPath(optionList, false, replacements)
 	// path is the key, since we're only appending from builderActions
 	if (path) {
 		const appendComponent = resultFromPath(builderActions, path, replacements)
-		arr.push(appendComponent)
+		optionList.push(appendComponent)
 	}
-	return arr
+	return optionList
 }
 
 export function buildModal({ path, replacements = [] }) {
@@ -125,8 +128,8 @@ function resultFromPath(obj, path, replacements) {
 		}
 		return item
 	}
-	// get value from object using path
-	let result = path.split("-").reduce((acc, key) => acc?.[key], obj)
+	// only if it's a string we need to traverse, if no path it's just the object (overrides)
+	let result = path ? path.split("-").reduce((acc, key) => acc?.[key], obj) : obj
 	// handle arrays
 	if (Array.isArray(result)) {
 		result.forEach((res, index) => {

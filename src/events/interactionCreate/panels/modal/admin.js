@@ -1,36 +1,31 @@
-import { panelAdminController } from "@controllers/panelController"
+import { panelAdminModalActions } from "@controllers/panels"
 
 export default async (interaction) => {
 	// since this fires for all interactions, we need to check if it's a component (has customId)
 	if (!interaction.customId) {
 		return
 	}
-	// panels | panel_type | action (what user clicked for modals, or selected observed name for stringSelect) | arg (if needed)
-	const [category, type, action, arg] = interaction.customId.split("|")
+	// panels | panel_type | action (what user clicked) | arg (if needed)
+	const [category, panelType, action, arg] = interaction.customId.split("|")
 	// ensure it's from a panel and is admin
-	if (category !== "panels" || type !== "admin") {
+	if (category !== "panels" || panelType !== "admin") {
 		return
 	}
 	// ensure it's a modal submit
 	if (!interaction.isModalSubmit()) {
 		return
 	}
-	// init the panel actions (panelController.js)
-	const panelAdminActions = await panelAdminController(interaction)
+	const panelActions = await panelAdminModalActions(interaction)
 	switch (action) {
 		case "create": {
-			return panelAdminActions.handleCreate()
+			return panelActions.handleCreate()
 		}
 		case "edit": {
-			return panelAdminActions.handleEdit()
+			return panelActions.handleEdit()
 		}
 		case "delete": {
-			return panelAdminActions.handleDelete()
-		}
-		default: {
-			// if it's not an action, it's a name for an observed entity
-			// TODO: ????
-			return
+			return panelActions.handleDelete()
 		}
 	}
+	return
 }

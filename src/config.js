@@ -10,7 +10,7 @@ export const BUILDER = {
 	actions: {
 		back: {
 			label: "Go Back",
-			value: "back|{0}|{1}",
+			value: "back",
 			description: "Go back to the previous menu",
 			emoji: {
 				name: "⬅️",
@@ -68,40 +68,40 @@ export const PANELS = {
 		actionList: [
 			{
 				label: "Add Wallet",
-				value: "addwallet|{0}",
-				description: "Add a crypto wallet to {0}",
+				value: "addwallet",
+				description: "Add a crypto wallet",
 				emoji: {
 					name: "💼",
 				},
 			},
 			{
 				label: "Remove Wallet",
-				value: "removewallet|{0}",
-				description: "Remove a crypto wallet from {0}",
+				value: "removewallet",
+				description: "Remove a crypto wallet",
 				emoji: {
 					name: "🚫",
 				},
 			},
 			{
 				label: "Add Social",
-				value: "addsocial|{0}",
-				description: "Add a social link to {0}",
+				value: "addsocial",
+				description: "Add a social link",
 				emoji: {
 					name: "🔗",
 				},
 			},
 			{
 				label: "Remove Social",
-				value: "removesocial|{0}",
-				description: "Remove a social link from {0}",
+				value: "removesocial",
+				description: "Remove a social link",
 				emoji: {
 					name: "🔗",
 				},
 			},
 			{
 				label: "Toggle Active",
-				value: "toggle|{0}",
-				description: "Toggle the active state of {0}",
+				value: "toggle",
+				description: "Toggle the active tracking state",
 				emoji: {
 					name: "🔄",
 				},
@@ -116,15 +116,15 @@ export const PANELS = {
 export const EMBED = {
 	panels: {
 		admin: {
-			admin: {
+			home: {
 				title: "Admin Panel",
-				description:
-					"Click the menu below and select the **action** you require!",
+				description: "Click the menu below and select the **action** you require!",
 			},
-			edit: {
+		},
+		edit: {
+			home: {
 				title: "Edit Panel » ({0})",
-				description:
-					"Click the menu below and select the **action** you require!\n**SELECTED: {0}**",
+				description: "Click the menu below and select the **action** you require!\n**SELECTED: {0}**",
 			},
 			addwallet: {
 				title: "Add Wallet » ({0})",
@@ -137,13 +137,21 @@ export const EMBED = {
 export const STRING_SELECT = {
 	panels: {
 		admin: {
-			custom_id: "panels|admin|{0}",
-			placeholder: "📌 Select an action...",
+			home: {
+				custom_id: "panels|admin",
+				placeholder: "⚙️ Select an action...",
+			}
 		},
-		addwallet: {
-			custom_id: "panels|admin|addwallet",
-			placeholder: "💸 Select a currency...",
-		},
+		edit: {
+			home: {
+				custom_id: "panels|edit|{0}", // first arg is observed name
+				placeholder: "📌 Select an action...",
+			},
+			addwallet: {
+				custom_id: "panels|edit|{0}|home", // first arg is observed name, last arg is the previous menu state (if any, static & hacky)
+				placeholder: "💸 Select a currency...",
+			},
+		}
 	},
 }
 

@@ -7,16 +7,15 @@ export const data = {
 
 export const run = async ({ interaction, client }) => {
 	// create an embed from the path in EMBED (config.js)
-	const embed = buildEmbed({
-		path: "panels-admin-admin",
-	})
+	const path = "panels-admin-home"
+	const embed = buildEmbed({ path })
 	const panelActions = buildPanelActionList({
-		panelType: "admin",
+		panelType: "admin"
 	})
 	// create a stringSelect from the path in STRING_SELECT (config.js)
 	const stringSelect = buildStringSelect({
-		path: "panels-admin",
-		options: panelActions,
+		path,
+		options: panelActions
 	})
 	// finally, send the data - ephemeral means only the user can see it
 	await interaction.reply({

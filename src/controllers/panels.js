@@ -1,7 +1,7 @@
 import { buildEmbed, buildStringSelect, buildModal, buildPanelActionList, buildOptionList } from "@utils/builder"
 import { createObserved, deleteObserved, getObserved } from "@repos/observed"
 import { getPanelDefaultPath, createPanelPath } from "@repos/panels"
-import { currencyArr, getCurrency } from "@repos/wallet"
+import { currencyArr, getCurrency, createWallet } from "@repos/wallet"
 import { getModalValues } from "@utils/interact"
 import { randomUUID } from "crypto"
 
@@ -47,14 +47,38 @@ export const panelAdminModalActions = async (interaction) => {
 	}
 }
 
-export const panelEditModalActions = async (interaction) => {
+export const panelEditModalActions = async (interaction, name) => {
 	// only handle admin modal interactions
+	const observed = await ensureObservedExists(interaction, name)
+	if (!observed) {
+		// TODO: handle ??
+		return
+	}
 	const modalValues = getModalValues(interaction)
 	return {
 		handleCurrencyAdd: async () => {
-			const { address } = modalValues
+			// validate currency
+			let currency = Object.keys(modalValues)[0]
+			const address = modalValues[currency]
+			currency = getCurrency(currency)
+			if (!currency) {
+				await interaction.reply({
+					content: `Currency: ${currency} does not exist!`,
+					ephemeral: true,
+				})
+				return
+			}
+			const { label, value } = currency
+			const wallet = await createWallet(address, value, observed)
+			if (!wallet) {
+				await interaction.reply({
+					content: `Wallet: ${address} already exists!`,
+					ephemeral: true,
+				})
+				return
+			}
 			await interaction.reply({
-				content: `Added wallet: ${address}!`,
+				content: `Added ${label} wallet: ${address}!`,
 				ephemeral: true,
 			})
 		},
@@ -67,6 +91,7 @@ export const panelEditSelectActions = async (interaction, panelType, name, actio
 	// always ensure that the observed entity exists
 	const observed = await ensureObservedExists(interaction, name)
 	if (!observed) {
+		// TODO: handle ??
 		return
 	}
 	// path is to locate the object in the config
@@ -99,8 +124,8 @@ export const panelEditSelectActions = async (interaction, panelType, name, actio
 				})
 				return
 			}
-			const { label } = currency
-			return panelPromptModal(interaction, path, [randomUUID(), label, name])
+			const { label, value } = currency
+			return panelPromptModal(interaction, path, [randomUUID(), label, name, value])
 		},
 	}
 }

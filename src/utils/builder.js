@@ -104,6 +104,9 @@ export function buildModal({ path, replacements = [] }) {
 		if (typeof component === "string") {
 			// need to traverse these by default for replacements
 			component = resultFromPath(MODAL, component, replacements)
+		} else {
+			// else it's an object, traverse the object
+			component = resultFromPath(component, false, replacements)
 		}
 		return {
 			type: ComponentType.ActionRow,

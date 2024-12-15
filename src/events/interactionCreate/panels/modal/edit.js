@@ -5,8 +5,8 @@ export default async (interaction) => {
 	if (!interaction.customId) {
 		return
 	}
-	// panels | panel_type | action (what user clicked) | arg (if needed)
-	const [category, panelType, action, uuid, arg] = interaction.customId.split("|")
+	// panels | panel_type | action (what user clicked) | uuid | observed name
+	const [category, panelType, action, uuid, name] = interaction.customId.split("|")
 	// ensure it's from a panel and is edit
 	if (category !== "panels" || panelType !== "edit") {
 		return
@@ -17,7 +17,7 @@ export default async (interaction) => {
 	}
 	console.log("edit modal action: " + action)
 	console.log("edit modal customId: " + interaction.customId)
-	const panelActions = await panelEditModalActions(interaction)
+	const panelActions = await panelEditModalActions(interaction, name)
 	switch (action) {
 		case "addcurrency": {
 			return panelActions.handleCurrencyAdd()

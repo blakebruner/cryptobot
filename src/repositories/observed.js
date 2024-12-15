@@ -2,7 +2,7 @@ import { Observed } from "@models/Observed"
 
 // blockdaemon.com
 
-// lazy load
+// -- lazy load
 let observedCache = new Map()
 
 export async function createObserved(name) {

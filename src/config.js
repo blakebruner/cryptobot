@@ -188,11 +188,11 @@ export const MODAL = {
 		edit: {
 			addcurrency: {
 				title: "Adding Wallet » ({1})",
-				custom_id: "panels|edit|addcurrency|{0}|{2}",
+				custom_id: "panels|edit|addcurrency|{0}|{2}", // uuid, observed name
 				components: [
 					{
 						type: ComponentType.TextInput,
-						custom_id: "address",
+						custom_id: "{3}", // curency name
 						label: "Enter Wallet Address",
 						style: TextInputStyle.Short,
 						required: true,

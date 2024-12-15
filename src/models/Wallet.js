@@ -14,5 +14,9 @@ export const Wallet = model("Wallet", new Schema({
 	observed: {  // Reference to the Observed schema (_id)
 		type: Schema.Types.ObjectId,
 		ref: "Observed"
-	}
+	},
+	active: {
+		type: Boolean,
+		default: true
+	},
 }))
